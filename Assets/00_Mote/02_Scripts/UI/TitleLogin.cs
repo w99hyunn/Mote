@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using TMPro;
 using System.Threading.Tasks;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
@@ -19,15 +21,21 @@ namespace DoHwa.UI
         [SerializeField] private Button gamesButton;
         [SerializeField] private string googleProvider = "oidc-google";
         [SerializeField] private Button guestButton;
+        [SerializeField] private TMP_Text progressLabel;
+        [SerializeField] private CanvasGroup menuGroup;
+        private Coroutine dotAnimation;
         private bool pending;
 
         private const string LastProviderKey = "Mote.Auth.LastProvider";
 
+        private void Awake() => menuGroup.alpha = 0f;
+
         private async void Start()
         {
-            SetChoicesVisible(false);
             try
             {
+                await SetProgressAsync(true);
+                if (!this) return;
                 await UnityServices.InitializeAsync();
                 if (!this) return;
                 var auth = AuthenticationService.Instance;
@@ -59,7 +67,7 @@ namespace DoHwa.UI
                     if (hasGoogle == hasGames) return;
                     provider = hasGoogle ? "Google" : "GPGS";
                 }
-                if (this) ShowEntry(provider);
+                if (this) await ShowEntryAsync(provider);
             }
             catch (Exception ex)
             {
@@ -67,22 +75,80 @@ namespace DoHwa.UI
             }
             finally
             {
-                if (this && gameObject.activeSelf) SetChoicesVisible(true);
+                if (this && gameObject.activeSelf) await SetProgressAsync(false);
             }
         }
 
-        private void SetChoicesVisible(bool visible)
+        private async Task SetProgressAsync(bool loading)
         {
-            googleButton.gameObject.SetActive(visible);
-            gamesButton.gameObject.SetActive(visible);
-            guestButton.gameObject.SetActive(visible);
+            pending = true;
+            AllowMenuInput(false);
+            await FadeTo(0f, 0.12f);
+            if (!this) return;
+            googleButton.gameObject.SetActive(!loading);
+            gamesButton.gameObject.SetActive(!loading);
+            guestButton.gameObject.SetActive(!loading);
+            if (dotAnimation != null)
+            {
+                StopCoroutine(dotAnimation);
+                dotAnimation = null;
+            }
+            progressLabel.gameObject.SetActive(loading);
+            if (loading)
+            {
+                const string message = "로그인 중";
+                progressLabel.text = message + "...";
+                dotAnimation = StartCoroutine(AnimateDots(message.Length));
+            }
+            await FadeTo(1f, 0.20f);
+            if (!this) return;
+            pending = loading;
+            AllowMenuInput(!loading);
         }
 
-        private void ShowEntry(string provider)
+        private async Task FadeTo(float target, float duration)
+        {
+            float from = menuGroup.alpha;
+            if (Mathf.Approximately(from, target)) return;
+            float elapsed = 0f;
+            while (elapsed < duration)
+            {
+                await Awaitable.NextFrameAsync();
+                if (!this) return;
+                elapsed += Time.unscaledDeltaTime;
+                menuGroup.alpha = Mathf.SmoothStep(from, target, elapsed / duration);
+            }
+        }
+
+        private void AllowMenuInput(bool allowed)
+        {
+            menuGroup.interactable = allowed;
+            menuGroup.blocksRaycasts = allowed;
+        }
+
+        private IEnumerator AnimateDots(int labelLength)
+        {
+            var delay = new WaitForSecondsRealtime(0.32f);
+            int dots = 1;
+            while (true)
+            {
+                progressLabel.maxVisibleCharacters = labelLength + dots;
+                yield return delay;
+                dots = dots % 3 + 1;
+            }
+        }
+
+        private async Task ShowEntryAsync(string provider)
         {
             PlayerPrefs.SetString(LastProviderKey, provider);
             PlayerPrefs.Save();
+            await FadeTo(0f, 0.14f);
+            if (!this) return;
+            progressLabel.gameObject.SetActive(false);
             entry.Show();
+            await FadeTo(1f, 0.24f);
+            if (!this) return;
+            AllowMenuInput(true);
             gameObject.SetActive(false);
         }
 
@@ -137,14 +203,14 @@ namespace DoHwa.UI
         private async void SignIn(string provider, Func<Task> authenticate)
         {
             if (pending || SystemUI.PopupCapturesInput) return;
-            pending = true;
-            googleButton.interactable = gamesButton.interactable = guestButton.interactable = false;
             try
             {
+                await SetProgressAsync(true);
+                if (!this) return;
                 await UnityServices.InitializeAsync();
                 await authenticate();
                 if (!this) return;
-                ShowEntry(provider);
+                await ShowEntryAsync(provider);
             }
             catch (OperationCanceledException) { }
             catch (Exception ex)
@@ -155,11 +221,7 @@ namespace DoHwa.UI
             }
             finally
             {
-                if (this && guestButton.gameObject.activeSelf)
-                {
-                    pending = false;
-                    googleButton.interactable = gamesButton.interactable = guestButton.interactable = true;
-                }
+                if (this && gameObject.activeSelf) await SetProgressAsync(false);
             }
         }
 
