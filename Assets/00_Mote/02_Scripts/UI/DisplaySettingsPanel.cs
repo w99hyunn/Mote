@@ -26,6 +26,9 @@ namespace DoHwa.UI
 
         private static Options current;
         private Options pending;
+        private CanvasGroup applyVisual;
+        private bool HasChanges => pending.fps != current.fps || pending.texture != current.texture ||
+                                   pending.keepAwake != current.keepAwake;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Restore()
@@ -71,6 +74,7 @@ namespace DoHwa.UI
                 previous[i].onClick.AddListener(() => Change(row, -1));
                 next[i].onClick.AddListener(() => Change(row, 1));
             }
+            applyVisual = apply.GetComponent<CanvasGroup>();
             apply.onClick.AddListener(Apply);
             revert.onClick.AddListener(Revert);
             volume.onValueChanged.AddListener(SaveVolume);
@@ -94,11 +98,13 @@ namespace DoHwa.UI
                 case Row.KeepAwake: pending.keepAwake = !pending.keepAwake; break;
             }
             Refresh();
-            status.text = "변경 사항을 적용해주세요.";
+            status.text = HasChanges ? "변경 사항을 적용해주세요." : "";
         }
 
         private void Refresh()
         {
+            apply.interactable = HasChanges;
+            applyVisual.alpha = apply.interactable ? 1f : 0.55f;
             values[(int)Row.FrameRate].text = pending.fps + " FPS";
             values[(int)Row.Texture].text = pending.texture switch { 0 => "높음", 1 => "보통", _ => "낮음" };
             values[(int)Row.KeepAwake].text = pending.keepAwake ? "항상 켜짐" : "기기 설정";
@@ -107,10 +113,12 @@ namespace DoHwa.UI
 
         private void Apply()
         {
+            if (!HasChanges) return;
             current = pending;
             ApplyToDevice();
             PlayerPrefs.SetString(DisplayKey, JsonUtility.ToJson(current));
             PlayerPrefs.Save();
+            Refresh();
             status.text = "설정을 저장했습니다.";
         }
 

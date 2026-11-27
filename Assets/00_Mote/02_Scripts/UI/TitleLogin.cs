@@ -17,6 +17,8 @@ namespace DoHwa.UI
     public sealed class TitleLogin : MonoBehaviour
     {
         [SerializeField] private TitleEntry entry;
+        [SerializeField] private CanvasGroup loginLogo;
+        [SerializeField] private CanvasGroup mainCanvasGroup;
         [SerializeField] private Button googleButton;
         [SerializeField] private Button gamesButton;
         [SerializeField] private string googleProvider = "oidc-google";
@@ -27,6 +29,7 @@ namespace DoHwa.UI
         private Coroutine dotAnimation;
         private bool pending;
 
+        private const float LogoRevealStartAlpha = 0.70f;
         private const string SignedOut = "SignedOut";
         private const string LastProviderKey = "Mote.Auth.LastProvider";
 
@@ -92,6 +95,16 @@ namespace DoHwa.UI
             AllowMenuInput(false);
             await FadeTo(0f, 0.12f);
             if (!this) return;
+            if (!loading)
+            {
+                while (mainCanvasGroup.alpha < LogoRevealStartAlpha)
+                {
+                    await Awaitable.NextFrameAsync();
+                    if (!this) return;
+                }
+            }
+            loginLogo.alpha = menuGroup.alpha;
+            loginLogo.gameObject.SetActive(!loading);
             googleButton.gameObject.SetActive(!loading);
             gamesButton.gameObject.SetActive(!loading);
             guestButton.gameObject.SetActive(!loading);
@@ -124,7 +137,7 @@ namespace DoHwa.UI
                 await Awaitable.NextFrameAsync();
                 if (!this) return;
                 elapsed += Time.unscaledDeltaTime;
-                menuGroup.alpha = Mathf.SmoothStep(from, target, elapsed / duration);
+                loginLogo.alpha = menuGroup.alpha = Mathf.SmoothStep(from, target, elapsed / duration);
             }
         }
 
@@ -173,10 +186,16 @@ namespace DoHwa.UI
             await SystemUI.LoadSceneAsync("Main");
         }
 
-        public void GuestLogin() => SignIn("Guest", SignInGuest);
+        public void GuestLogin()
+        {
+            if (pending || SystemUI.PopupCapturesInput) return;
+            SystemUI.Confirm("게스트 로그인", "앱을 삭제하거나 기기를 바꾸면\n게스트 데이터를 복구할 수 없어요.",
+                "계속하기", () => SignIn("Guest", SignInGuest));
+        }
 
         public void GoogleLogin()
         {
+            if (pending || SystemUI.PopupCapturesInput) return;
 #if UNITY_ANDROID && !UNITY_EDITOR
             SignIn("Google", async () =>
             {
@@ -191,6 +210,7 @@ namespace DoHwa.UI
 
         public void PlayGamesLogin()
         {
+            if (pending || SystemUI.PopupCapturesInput) return;
 #if UNITY_ANDROID && !UNITY_EDITOR
             SignIn("GPGS", async () =>
             {
@@ -223,7 +243,7 @@ namespace DoHwa.UI
 
         private async void SignIn(string provider, Func<Task> authenticate)
         {
-            if (pending || SystemUI.PopupCapturesInput) return;
+            if (pending) return;
             try
             {
                 await SetProgressAsync(true);
