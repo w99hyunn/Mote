@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "Mote.Server": {
+      "commandName": "Project",
+      "applicationUrl": "https://localhost:7248",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

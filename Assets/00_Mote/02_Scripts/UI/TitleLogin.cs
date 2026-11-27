@@ -17,6 +17,7 @@ namespace DoHwa.UI
     public sealed class TitleLogin : MonoBehaviour
     {
         [SerializeField] private TitleEntry entry;
+        [SerializeField, Tooltip("Mote 서버 HTTPS 주소. 에디터에서 비워 두면 로컬 개발 서버를 사용합니다.")] private string serverUrl;
         [SerializeField] private CanvasGroup loginLogo;
         [SerializeField] private CanvasGroup mainCanvasGroup;
         [SerializeField] private Button googleButton;
@@ -81,6 +82,7 @@ namespace DoHwa.UI
             }
             catch (Exception ex)
             {
+                if (this) SystemUI.ShowNotice("로그인 실패", "로그인을 완료하지 못했어요. 다시 시도해 주세요.");
                 Debug.LogWarning($"Login restore failed: {ex.GetType().Name}");
             }
             finally
@@ -160,8 +162,33 @@ namespace DoHwa.UI
             }
         }
 
+        [Serializable] private sealed class LoginResponse { public string playerId; }
+
+        private Uri GetServerEndpoint()
+        {
+            string url = serverUrl;
+#if UNITY_EDITOR
+            if (string.IsNullOrWhiteSpace(url)) url = "https://localhost:7248";
+#endif
+            if (!Uri.TryCreate(url, UriKind.Absolute, out var endpoint) || endpoint.Scheme != Uri.UriSchemeHttps)
+                throw new InvalidOperationException("Mote server HTTPS URL is required.");
+            return endpoint;
+        }
+
         private async Task ShowEntryAsync(string provider)
         {
+            var endpoint = GetServerEndpoint();
+            var auth = AuthenticationService.Instance;
+            using var request = new UnityEngine.Networking.UnityWebRequest(new Uri(endpoint, "/api/auth/login"), "POST");
+            request.downloadHandler = new UnityEngine.Networking.DownloadHandlerBuffer();
+            request.SetRequestHeader("Authorization", "Bearer " + auth.AccessToken);
+            request.timeout = 15;
+            request.redirectLimit = 0;
+            await request.SendWebRequest();
+            if (!this) return;
+            var response = JsonUtility.FromJson<LoginResponse>(request.downloadHandler.text);
+            if (response == null || response.playerId != auth.PlayerId)
+                throw new InvalidOperationException("Unexpected player in server login response.");
             PlayerPrefs.SetString(LastProviderKey, provider);
             PlayerPrefs.Save();
             await FadeTo(0f, 0.14f);
@@ -197,10 +224,14 @@ namespace DoHwa.UI
         public void GoogleLogin()
         {
             if (pending || SystemUI.PopupCapturesInput) return;
-#if UNITY_ANDROID && !UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_STANDALONE || UNITY_ANDROID
             SignIn("Google", async () =>
             {
+#if UNITY_EDITOR || UNITY_STANDALONE
+                string token = await DesktopGoogleLogin.GetToken(GetServerEndpoint(), destroyCancellationToken);
+#else
                 string token = await GetGoogleToken();
+#endif
                 SelectProfile("default");
                 await AuthenticationService.Instance.SignInWithOpenIdConnectAsync(googleProvider, token);
             });

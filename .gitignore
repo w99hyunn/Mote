@@ -116,3 +116,6 @@ InitTestScene*.unity*
 
 
 .vscode/
+!/Server/Mote.Server.csproj
+/Server/bin/
+/Server/obj/
