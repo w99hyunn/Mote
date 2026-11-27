@@ -1439,6 +1439,7 @@ GameObject:
   - component: {fileID: 122411957}
   - component: {fileID: 122411956}
   - component: {fileID: 122411955}
+  - component: {fileID: 122411960}
   m_Layer: 5
   m_Name: SettingsPopup
   m_TagString: Untagged
@@ -1556,6 +1557,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 122411953}
   m_CullTransparentMesh: 1
+--- !u!114 &122411960
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 122411953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19e30a10e6e0cdf45b1eaf4c9c0a0c3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DoHwa.UI.TopSafeArea
+  content:
+  - {fileID: 1777815676}
+  - {fileID: 150694190}
+  - {fileID: 1538874835}
 --- !u!114 &140311635
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2889,6 +2906,7 @@ MonoBehaviour:
   guestButton: {fileID: 1434960674}
   progressLabel: {fileID: 185766308}
   menuGroup: {fileID: 1081586187}
+  buttonAnimator: {fileID: 1081586188}
 --- !u!114 &234592073
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6273,7 +6291,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC885\uB8CC"
+  m_text: "\uB85C\uADF8\uC544\uC6C3"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c1bb35bf5dfd36e4794efd7e14d83f5c, type: 2}
   m_sharedMaterial: {fileID: -1588621137353977741, guid: c1bb35bf5dfd36e4794efd7e14d83f5c, type: 2}
@@ -6952,6 +6970,9 @@ GameObject:
   - component: {fileID: 893047095}
   - component: {fileID: 893047094}
   - component: {fileID: 893047093}
+  - component: {fileID: 893047098}
+  - component: {fileID: 893047097}
+  - component: {fileID: 893047099}
   m_Layer: 0
   m_Name: MainCanvas
   m_TagString: Untagged
@@ -7044,6 +7065,54 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!95 &893047097
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 893047091}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 808f8ecc71cafb2459259bf24d01a3b2, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 2
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!225 &893047098
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 893047091}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &893047099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 893047091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19e30a10e6e0cdf45b1eaf4c9c0a0c3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DoHwa.UI.TopSafeArea
+  content:
+  - {fileID: 1081586184}
 --- !u!114 &916265074
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9566,6 +9635,7 @@ GameObject:
   - component: {fileID: 1081586185}
   - component: {fileID: 1081586186}
   - component: {fileID: 1081586187}
+  - component: {fileID: 1081586188}
   m_Layer: 0
   m_Name: UtilityMenu
   m_TagString: Untagged
@@ -9650,6 +9720,28 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!95 &1081586188
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1081586182}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c2ad597f8ef93de4cbf69c42799adabc, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 2
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &1081734945
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13490,6 +13582,7 @@ GameObject:
   - component: {fileID: 1434960676}
   - component: {fileID: 1434960675}
   - component: {fileID: 1434960674}
+  - component: {fileID: 1434960678}
   m_Layer: 0
   m_Name: GuestLoginButton
   m_TagString: Untagged
@@ -13673,6 +13766,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1434960672}
   m_CullTransparentMesh: 1
+--- !u!225 &1434960678
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1434960672}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1443815852
 GameObject:
   m_ObjectHideFlags: 0
@@ -13974,7 +14079,7 @@ GameObject:
   - component: {fileID: 1453406394}
   - component: {fileID: 1453406393}
   m_Layer: 5
-  m_Name: ExitButton
+  m_Name: LogoutButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14058,10 +14163,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 160245687}
-        m_TargetAssemblyTypeName: DoHwa.UI.LoginUtilityPanel, Assembly-CSharp
-        m_MethodName: OpenExit
-        m_Mode: 0
+      - m_Target: {fileID: 234592072}
+        m_TargetAssemblyTypeName: DoHwa.UI.TitleLogin, Assembly-CSharp
+        m_MethodName: ConfirmLogout
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: 
@@ -16298,7 +16403,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 08fac156f51447bbad4361bedfeb5892, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9ff4b03dd655ebc4da17defe88207881, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -17576,7 +17681,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 1}
+  m_BackGroundColor: {r: 1, g: 1, b: 1, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -17762,6 +17867,8 @@ GameObject:
   - component: {fileID: 1909525845}
   - component: {fileID: 1909525844}
   - component: {fileID: 1909525843}
+  - component: {fileID: 1909525847}
+  - component: {fileID: 1909525846}
   m_Layer: 5
   m_Name: BackgroundCanvas
   m_TagString: Untagged
@@ -17837,6 +17944,40 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!95 &1909525846
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1909525842}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a752db427ea786647b1aa252b99a580e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 2
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!225 &1909525847
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1909525842}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1927263132
 GameObject:
   m_ObjectHideFlags: 0

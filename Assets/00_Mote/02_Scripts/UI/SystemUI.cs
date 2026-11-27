@@ -90,9 +90,6 @@ namespace DoHwa.UI
             Open(notice, noticeButton, null);
         }
 
-        public static void ConfirmQuit() =>
-            Confirm("게임 종료", "게임을 종료하시겠습니까?", "종료", Quit);
-
         public static void Confirm(string title, string message, string label, Action action) =>
             Present(ui => ui.OpenConfirmation(title, message, label, action));
 
@@ -151,13 +148,5 @@ namespace DoHwa.UI
             previousSelection = null;
         }
 
-        private static void Quit()
-        {
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-#else
-            Application.Quit();
-#endif
-        }
     }
 }

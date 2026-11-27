@@ -32,7 +32,6 @@ namespace DoHwa.UI
 
         public void OpenNotices() => SystemUI.ShowNotices();
         public void OpenLanguage() => SystemUI.ShowLanguage();
-        public void OpenExit() => SystemUI.ConfirmQuit();
         public void CloseSettings() => ClosePanel(settings);
         private async void ClosePanel(GameObject panel)
         {

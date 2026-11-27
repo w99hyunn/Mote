@@ -23,15 +23,22 @@ namespace DoHwa.UI
         [SerializeField] private Button guestButton;
         [SerializeField] private TMP_Text progressLabel;
         [SerializeField] private CanvasGroup menuGroup;
+        [SerializeField] private Animator buttonAnimator;
         private Coroutine dotAnimation;
         private bool pending;
 
+        private const string SignedOut = "SignedOut";
         private const string LastProviderKey = "Mote.Auth.LastProvider";
 
         private void Awake() => menuGroup.alpha = 0f;
 
         private async void Start()
         {
+            if (PlayerPrefs.GetString(LastProviderKey) == SignedOut)
+            {
+                await SetProgressAsync(false);
+                return;
+            }
             try
             {
                 await SetProgressAsync(true);
@@ -88,6 +95,7 @@ namespace DoHwa.UI
             googleButton.gameObject.SetActive(!loading);
             gamesButton.gameObject.SetActive(!loading);
             guestButton.gameObject.SetActive(!loading);
+            if (!loading) buttonAnimator.Play("LoginButtons", 0, 0f);
             if (dotAnimation != null)
             {
                 StopCoroutine(dotAnimation);
@@ -146,10 +154,23 @@ namespace DoHwa.UI
             if (!this) return;
             progressLabel.gameObject.SetActive(false);
             entry.Show();
+            buttonAnimator.Play("EntryButtons", 0, 0f);
             await FadeTo(1f, 0.24f);
             if (!this) return;
             AllowMenuInput(true);
             gameObject.SetActive(false);
+        }
+
+        public void ConfirmLogout() =>
+            SystemUI.Confirm("로그아웃", "로그아웃하시겠습니까?", "로그아웃", Logout);
+
+        private async void Logout()
+        {
+            var auth = AuthenticationService.Instance;
+            if (auth.IsSignedIn) auth.SignOut(clearCredentials: auth.Profile != "guest");
+            PlayerPrefs.SetString(LastProviderKey, SignedOut);
+            PlayerPrefs.Save();
+            await SystemUI.LoadSceneAsync("Main");
         }
 
         public void GuestLogin() => SignIn("Guest", SignInGuest);

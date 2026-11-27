@@ -33,7 +33,7 @@ namespace DoHwa.UI
             AudioListener.volume = Mathf.Clamp01(PlayerPrefs.GetFloat(VolumeKey, 1f));
             current = new Options
             {
-                fps = 30, texture = QualitySettings.globalTextureMipmapLimit
+                fps = 60, texture = QualitySettings.globalTextureMipmapLimit
             };
 
             // Older display saves share the fps and texture fields.

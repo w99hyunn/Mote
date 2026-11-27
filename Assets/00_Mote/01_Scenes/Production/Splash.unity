@@ -405,6 +405,7 @@ GameObject:
   - component: {fileID: 830115635}
   - component: {fileID: 830115634}
   - component: {fileID: 830115636}
+  - component: {fileID: 830115637}
   m_Layer: 0
   m_Name: Splash Canvas
   m_TagString: Untagged
@@ -545,6 +546,22 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &830115637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 830115629}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19e30a10e6e0cdf45b1eaf4c9c0a0c3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DoHwa.UI.TopSafeArea
+  content:
+  - {fileID: 2010370835}
+  - {fileID: 934814559}
+  - {fileID: 2100000001}
 --- !u!1 &934814558
 GameObject:
   m_ObjectHideFlags: 0
