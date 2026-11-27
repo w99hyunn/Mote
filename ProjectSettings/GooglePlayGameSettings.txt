@@ -1,0 +1,5 @@
+proj.AppId=697223549922
+and.ClientId=697223549922-h0dg73bikdpasv6jp24asnhftutdgplq.apps.googleusercontent.com
+android.SetupDone=true
+lastUpgrade=20100
+proj.pluginVersion=2.1.0

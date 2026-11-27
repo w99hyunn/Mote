@@ -106,15 +106,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3385217139904959580, guid: 4fd167768ef3a1542856a65bb45e3645, type: 3}
       propertyPath: m_fontColor.b
-      value: 0.28
+      value: 0.93
       objectReference: {fileID: 0}
     - target: {fileID: 3385217139904959580, guid: 4fd167768ef3a1542856a65bb45e3645, type: 3}
       propertyPath: m_fontColor.g
-      value: 0.24
+      value: 0.96
       objectReference: {fileID: 0}
     - target: {fileID: 3385217139904959580, guid: 4fd167768ef3a1542856a65bb45e3645, type: 3}
       propertyPath: m_fontColor.r
-      value: 0.2
+      value: 0.97
       objectReference: {fileID: 0}
     - target: {fileID: 3671946282936312654, guid: 4fd167768ef3a1542856a65bb45e3645, type: 3}
       propertyPath: m_Sprite
@@ -139,7 +139,7 @@ PrefabInstance:
     - target: {fileID: 4500384071213757876, guid: 4fd167768ef3a1542856a65bb45e3645, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 1b0b0dd406be470459214daf5e129374, type: 2}
+      objectReference: {fileID: 21300000, guid: afbaace32caebb74dad567f457238a2e, type: 3}
     - target: {fileID: 4500384071213757876, guid: 4fd167768ef3a1542856a65bb45e3645, type: 3}
       propertyPath: m_Material
       value: 
@@ -184,5 +184,25 @@ PrefabInstance:
     - {fileID: 2085865001926406934, guid: 4fd167768ef3a1542856a65bb45e3645, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5041418123025231185, guid: 4fd167768ef3a1542856a65bb45e3645, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7925814687896065689}
   m_SourcePrefab: {fileID: 100100000, guid: 4fd167768ef3a1542856a65bb45e3645, type: 3}
+--- !u!1 &6721550795686431011 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5041418123025231185, guid: 4fd167768ef3a1542856a65bb45e3645, type: 3}
+  m_PrefabInstance: {fileID: 1779214067882321010}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7925814687896065689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6721550795686431011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93f7be488091e5e4c9459bf9188d2c20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DoHwa.UI.UiCapsuleSlice

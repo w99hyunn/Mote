@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,121 +12,124 @@ namespace DoHwa.UI
         [SerializeField] private Button apply, revert;
         [SerializeField] private TMP_Text applyLabel, status;
         [SerializeField] private Slider volume;
-        private readonly List<Vector2Int> resolutions = new();
-        private readonly int[] limits = { 30, 60, 90, 120, 144, 165, 240, -1 };
-        private readonly FullScreenMode[] modes = { FullScreenMode.Windowed, FullScreenMode.FullScreenWindow, FullScreenMode.ExclusiveFullScreen };
-        private int[] selected = new int[6];
-        [Serializable] private struct Snapshot
+
+        private const string DisplayKey = "Settings.MobileDisplay";
+        private const string VolumeKey = "Settings.Volume";
+        private enum Row { FrameRate, Texture, KeepAwake }
+
+        [Serializable]
+        private struct Options
         {
-            public int width, height, mode, quality, sync, fps, texture;
-            public static Snapshot Capture() => new() { width=Screen.width, height=Screen.height,
-                mode=(int)Screen.fullScreenMode, quality=QualitySettings.GetQualityLevel(),
-                sync=QualitySettings.vSyncCount, fps=Application.targetFrameRate,
-                texture=QualitySettings.globalTextureMipmapLimit };
-            public void Apply()
-            {
-                QualitySettings.SetQualityLevel(quality, true);
-                QualitySettings.vSyncCount=sync;
-                Application.targetFrameRate=fps;
-                QualitySettings.globalTextureMipmapLimit=texture;
-#if !UNITY_EDITOR
-                if (!Application.isMobilePlatform)
-                    Screen.SetResolution(width,height,(FullScreenMode)mode);
-#endif
-            }
+            public int fps, texture;
+            public bool keepAwake;
         }
+
+        private static Options current;
+        private Options pending;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Restore()
         {
-            AudioListener.volume=PlayerPrefs.GetFloat("Settings.Volume",1);
-            if(PlayerPrefs.HasKey("Settings.Display"))
-                JsonUtility.FromJson<Snapshot>(PlayerPrefs.GetString("Settings.Display")).Apply();
+            AudioListener.volume = Mathf.Clamp01(PlayerPrefs.GetFloat(VolumeKey, 1f));
+            current = new Options
+            {
+                fps = 30, texture = QualitySettings.globalTextureMipmapLimit
+            };
+
+            // Older display saves share the fps and texture fields.
+            string json = PlayerPrefs.GetString(DisplayKey, PlayerPrefs.GetString("Settings.Display", ""));
+            if (!string.IsNullOrEmpty(json))
+            {
+                try { current = ReadOptions(json, current); }
+                catch (ArgumentException) { /* Keep defaults for a damaged save. */ }
+            }
+            current.fps = current.fps >= 60 ? 60 : 30;
+            current.texture = Mathf.Clamp(current.texture, 0, 2);
+            ApplyToDevice();
         }
+
+        private static Options ReadOptions(string json, Options defaults)
+        {
+            object boxed = defaults;
+            JsonUtility.FromJsonOverwrite(json, boxed);
+            return (Options)boxed;
+        }
+
+        private static void ApplyToDevice()
+        {
+            Application.targetFrameRate = current.fps;
+            QualitySettings.globalTextureMipmapLimit = current.texture;
+            if (Application.isMobilePlatform)
+                Screen.sleepTimeout = current.keepAwake ? SleepTimeout.NeverSleep : SleepTimeout.SystemSetting;
+        }
+
         private void Awake()
         {
-            foreach(var r in Screen.resolutions)
+            for (int i = 0; i < values.Length; i++)
             {
-                var size=new Vector2Int(r.width,r.height);
-                if(!resolutions.Contains(size))resolutions.Add(size);
-            }
-            for(int i=0;i<6;i++)
-            {
-                int row=i;
-                previous[i].onClick.AddListener(()=>Change(row,-1));
-                next[i].onClick.AddListener(()=>Change(row,1));
+                Row row = (Row)i;
+                previous[i].onClick.AddListener(() => Change(row, -1));
+                next[i].onClick.AddListener(() => Change(row, 1));
             }
             apply.onClick.AddListener(Apply);
             revert.onClick.AddListener(Revert);
             volume.onValueChanged.AddListener(SaveVolume);
         }
-        private void OnEnable(){ReadCurrent();status.text="";}
-        private void ReadCurrent() => Read(Snapshot.Capture());
-        private void Read(Snapshot snapshot)
+
+        private void OnEnable()
         {
-            var size = new Vector2Int(snapshot.width, snapshot.height);
-            if (!resolutions.Contains(size))
-            {
-                resolutions.Add(size);
-                resolutions.Sort((a,b)=>a.x==b.x?a.y.CompareTo(b.y):a.x.CompareTo(b.x));
-            }
-            selected[0]=resolutions.IndexOf(size);
-            selected[1]=Math.Max(0,Array.IndexOf(modes,(FullScreenMode)snapshot.mode));
-            selected[2]=snapshot.quality;
-            selected[3]=snapshot.sync>0?1:0;
-            selected[4]=Math.Max(0,Array.IndexOf(limits,snapshot.fps));
-            selected[5]=Mathf.Clamp(snapshot.texture,0,2);
+            pending = current;
             volume.SetValueWithoutNotify(AudioListener.volume);
+            applyLabel.text = "적용";
+            status.text = "";
             Refresh();
         }
-        private void Change(int row,int direction)
+
+        private void Change(Row row, int direction)
         {
-            int count=row switch {0=>resolutions.Count,1=>modes.Length,2=>QualitySettings.names.Length,3=>2,4=>limits.Length,_=>3};
-            selected[row]=(selected[row]+direction+count)%count;
+            switch (row)
+            {
+                case Row.FrameRate: pending.fps = pending.fps == 30 ? 60 : 30; break;
+                case Row.Texture: pending.texture = (pending.texture + direction + 3) % 3; break;
+                case Row.KeepAwake: pending.keepAwake = !pending.keepAwake; break;
+            }
             Refresh();
-            status.text="변경 사항을 적용해주세요.";
+            status.text = "변경 사항을 적용해주세요.";
         }
+
         private void Refresh()
         {
-            var r=resolutions[selected[0]];
-            bool mobile = Application.isMobilePlatform;
-            values[0].text=$"{r.x} x {r.y}";
-            values[1].text=mobile ? "기기 기본값" : new[]{"창 모드","테두리 없는 전체 화면","전체 화면"}[selected[1]];
-            string quality=QualitySettings.names[selected[2]];
-            values[2].text=quality=="Mobile"?"낮음":quality=="PC"?"높음":quality;
-            values[3].text=mobile ? "기기 기본값" : selected[3]==1?"켜짐":"꺼짐";
-            values[4].text=!mobile && selected[3]==1?"모니터 주사율":limits[selected[4]]<0?"제한 없음":limits[selected[4]]+" FPS";
-            values[5].text=new[]{"원본","1/2","1/4"}[selected[5]];
-            previous[0].interactable=next[0].interactable=!mobile && resolutions.Count>1;
-            previous[1].interactable=next[1].interactable=!mobile;
-            previous[2].interactable=next[2].interactable=QualitySettings.names.Length>1;
-            previous[3].interactable=next[3].interactable=!mobile;
-            previous[4].interactable=next[4].interactable=mobile || selected[3]==0;
-            applyLabel.text="적용";
+            values[(int)Row.FrameRate].text = pending.fps + " FPS";
+            values[(int)Row.Texture].text = pending.texture switch { 0 => "높음", 1 => "보통", _ => "낮음" };
+            values[(int)Row.KeepAwake].text = pending.keepAwake ? "항상 켜짐" : "기기 설정";
         }
+
+
         private void Apply()
         {
-            var resolution = resolutions[selected[0]];
-            var settings = new Snapshot
-            {
-                width = resolution.x, height = resolution.y, mode = (int)modes[selected[1]],
-                quality = selected[2], sync = selected[3], fps = limits[selected[4]], texture = selected[5]
-            };
-            settings.Apply();
-            PlayerPrefs.SetString("Settings.Display", JsonUtility.ToJson(settings));
+            current = pending;
+            ApplyToDevice();
+            PlayerPrefs.SetString(DisplayKey, JsonUtility.ToJson(current));
             PlayerPrefs.Save();
             status.text = "설정을 저장했습니다.";
         }
+
         private void Revert()
         {
-            ReadCurrent();
+            pending = current;
+            Refresh();
             status.text = "변경을 취소했습니다.";
         }
+
         private static void SaveVolume(float value)
         {
-            AudioListener.volume=value;PlayerPrefs.SetFloat("Settings.Volume",value);
+            AudioListener.volume = value;
+            PlayerPrefs.SetFloat(VolumeKey, value);
         }
-        private void OnApplicationQuit()=>PlayerPrefs.Save();
+
+        private void OnApplicationPause(bool paused)
+        {
+            if (paused) PlayerPrefs.Save();
+        }
     }
 }
-
