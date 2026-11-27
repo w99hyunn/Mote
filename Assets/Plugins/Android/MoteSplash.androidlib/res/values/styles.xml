@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <style name="MoteSystemBarTheme" parent="@style/BaseUnityGameActivityTheme">
+    <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+    <item name="android:windowTranslucentStatus">false</item>
+    <item name="android:statusBarColor">@android:color/transparent</item>
+    <item name="android:enforceStatusBarContrast">false</item>
+  </style>
+  <style name="MoteLaunchTheme" parent="@style/MoteSystemBarTheme" />
+</resources>

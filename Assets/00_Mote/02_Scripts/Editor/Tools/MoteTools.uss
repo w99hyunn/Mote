@@ -1,0 +1,50 @@
+.workspace {
+    flex-grow: 1;
+    --surface: #d5d5d5;
+    --rail: #c9c9c9;
+    --line: #ababab;
+    --subtle: #424242;
+    --action: #326091;
+}
+.workspace.pro-skin {
+    --surface: #414141;
+    --rail: #303030;
+    --line: #515151;
+    --subtle: #c0c0c0;
+    --action: #38618a;
+}
+.sidebar { min-width: 108px; background-color: var(--rail); }
+.project, .page-header, .nav-item, .actions, .platforms, .previews { flex-direction: row; align-items: center; }
+.project { min-height: 56px; padding-left: 9px; border-bottom-width: 1px; border-bottom-color: var(--line); margin-bottom: 6px; }
+.project Image { width: 28px; height: 28px; margin-right: 6px; }
+.project Label { font-size: 15px; -unity-font-style: bold; }
+.nav-item { flex-grow: 1; padding-left: 10px; }
+.nav-item Image { width: 16px; height: 16px; margin-right: 6px; }
+.content { min-width: 310px; }
+.page-header { height: 55px; padding-left: 16px; border-bottom-width: 1px; border-bottom-color: var(--line); }
+.page-header Image { width: 21px; height: 21px; margin-right: 7px; }
+.page-header Label { font-size: 19px; -unity-font-style: bold; }
+.page-body { padding: 12px 14px 16px 14px; max-width: 900px; }
+.tool-section { background-color: var(--surface); border-width: 1px; border-color: var(--line); border-radius: 4px; margin-bottom: 8px; padding: 8px 10px; }
+.section-title { -unity-font-style: bold; font-size: 12px; margin-bottom: 5px; }
+.section-body > .unity-base-field { margin-top: 2px; margin-bottom: 2px; }
+.section-body .unity-base-field__label { min-width: 112px; }
+.format-tabs { margin: 0 0 10px 0; }
+.format-tabs > .unity-base-field__input { flex-grow: 1; }
+.format-tabs Button { flex-grow: 1; height: 27px; }
+.previews { flex-wrap: wrap; justify-content: space-around; padding: 4px 0 7px 0; }
+.preview-item { align-items: center; margin: 2px 8px; }
+.preview-item > Label { margin-top: 4px; color: var(--subtle); }
+.mask { width: 86px; height: 86px; overflow: hidden; }
+.mask Image { width: 100%; height: 100%; }
+.adaptive { border-radius: 43px; }
+.ios { border-radius: 19px; }
+.platforms { margin-top: 5px; flex-wrap: wrap; }
+.platforms > Label { min-width: 112px; }
+.platforms Toggle { margin-right: 10px; }
+.actions { justify-content: flex-end; flex-wrap: wrap; margin-top: 5px; }
+.actions Button { min-height: 25px; padding: 0 10px; margin: 3px 0 0 5px; }
+.actions .primary:enabled { background-color: var(--action); color: white; -unity-font-style: bold; }
+.actions .primary:hover:enabled { background-color: #4674a0; }
+.status { margin-top: 6px; }
+.output-size { white-space: normal; }
