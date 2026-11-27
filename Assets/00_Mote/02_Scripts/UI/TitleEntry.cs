@@ -9,7 +9,6 @@ namespace DoHwa.UI
         [SerializeField] private Animator animator;
         [SerializeField] private CanvasGroup input;
         [SerializeField] private Image confetti;
-        [SerializeField] private GameObject homeHeader;
         [SerializeField] private GameObject homeNavigation;
         private Material effect;
         private bool entering;
@@ -31,7 +30,6 @@ namespace DoHwa.UI
             if (entering || SystemUI.PopupCapturesInput) return;
             entering = true;
             input.interactable = input.blocksRaycasts = false;
-            homeHeader.SetActive(true);
             animator.enabled = true;
             confetti.gameObject.SetActive(true);
             effect.SetFloat("_Clicked", 1f);
@@ -44,7 +42,7 @@ namespace DoHwa.UI
                 }
                 while (animator.GetCurrentAnimatorStateInfo(0).IsName("Commit") &&
                        animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f);
-                gameObject.SetActive(false);
+                await SystemUI.LoadSceneAsync("InGame");
             }
             catch (OperationCanceledException) { }
         }

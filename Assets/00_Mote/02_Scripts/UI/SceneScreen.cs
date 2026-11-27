@@ -3,7 +3,7 @@ using UnityEngine.EventSystems;
 
 namespace DoHwa.UI
 {
-    public abstract class SceneScreen : MonoBehaviour
+    public class SceneScreen : MonoBehaviour
     {
         [SerializeField] private EventSystem inputSystem;
         [SerializeField] private AudioListener audioListener;

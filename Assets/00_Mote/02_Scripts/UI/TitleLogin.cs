@@ -31,14 +31,11 @@ namespace DoHwa.UI
         private bool pending;
 
         private const float LogoRevealStartAlpha = 0.70f;
-        private const string SignedOut = "SignedOut";
-        private const string LastProviderKey = "Mote.Auth.LastProvider";
-
         private void Awake() => menuGroup.alpha = 0f;
 
         private async void Start()
         {
-            if (PlayerPrefs.GetString(LastProviderKey) == SignedOut)
+            if (PlayerPrefs.GetString(AccountMenu.LastProviderKey) == AccountMenu.SignedOut)
             {
                 await SetProgressAsync(false);
                 return;
@@ -50,7 +47,7 @@ namespace DoHwa.UI
                 await UnityServices.InitializeAsync();
                 if (!this) return;
                 var auth = AuthenticationService.Instance;
-                var provider = PlayerPrefs.GetString(LastProviderKey, "");
+                var provider = PlayerPrefs.GetString(AccountMenu.LastProviderKey, "");
                 bool legacy = string.IsNullOrEmpty(provider);
                 if (legacy)
                 {
@@ -189,7 +186,8 @@ namespace DoHwa.UI
             var response = JsonUtility.FromJson<LoginResponse>(request.downloadHandler.text);
             if (response == null || response.playerId != auth.PlayerId)
                 throw new InvalidOperationException("Unexpected player in server login response.");
-            PlayerPrefs.SetString(LastProviderKey, provider);
+            DoHwa.Planet.PlanetApi.Endpoint = endpoint;
+            PlayerPrefs.SetString(AccountMenu.LastProviderKey, provider);
             PlayerPrefs.Save();
             await FadeTo(0f, 0.14f);
             if (!this) return;
@@ -200,18 +198,6 @@ namespace DoHwa.UI
             if (!this) return;
             AllowMenuInput(true);
             gameObject.SetActive(false);
-        }
-
-        public void ConfirmLogout() =>
-            SystemUI.Confirm("로그아웃", "로그아웃하시겠습니까?", "로그아웃", Logout);
-
-        private async void Logout()
-        {
-            var auth = AuthenticationService.Instance;
-            if (auth.IsSignedIn) auth.SignOut(clearCredentials: auth.Profile != "guest");
-            PlayerPrefs.SetString(LastProviderKey, SignedOut);
-            PlayerPrefs.Save();
-            await SystemUI.LoadSceneAsync("Main");
         }
 
         public void GuestLogin()

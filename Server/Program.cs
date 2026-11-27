@@ -40,10 +40,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 builder.Services.AddDataProtection();
 builder.Services.AddHttpClient("Google");
+builder.Services.AddSingleton(_ => Npgsql.NpgsqlDataSource.Create(
+    builder.Configuration.GetConnectionString("Planets")
+    ?? throw new InvalidOperationException("ConnectionStrings:Planets is required.")));
 var app = builder.Build();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapGoogleDesktopLogin();
+await app.MapPlanetsAsync();
 app.MapPost("/api/auth/login", (ClaimsPrincipal player) =>
     Results.Ok(new { playerId = player.FindFirstValue("sub") })).RequireAuthorization();
 app.Run();

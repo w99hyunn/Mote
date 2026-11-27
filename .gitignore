@@ -119,3 +119,4 @@ InitTestScene*.unity*
 !/Server/Mote.Server.csproj
 /Server/bin/
 /Server/obj/
+/Server/App_Data/

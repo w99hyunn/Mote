@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 namespace DoHwa.UI
 {
@@ -12,6 +12,7 @@ namespace DoHwa.UI
         private int revision;
         private bool entering,leaving,closed;
         public bool IsLeaving => leaving;
+        public bool IsClosed => leaving && closed;
         public void Configure(RectTransform[] targets)=>sections=targets;
         private void Awake()=>TryGetComponent<CanvasGroup>(out group);
         private void OnEnable()=>Replay();
