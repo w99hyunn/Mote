@@ -391,6 +391,7 @@ GameObject:
   - component: {fileID: 6247486515588051849}
   - component: {fileID: 2085865001926406934}
   - component: {fileID: 2327223649378136036}
+  - component: {fileID: 5065595598415970035}
   m_Layer: 5
   m_Name: CancelButton
   m_TagString: Untagged
@@ -506,6 +507,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+  pressFeedback: {fileID: 5065595598415970035}
 --- !u!225 &6152691122188456893
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -577,6 +579,23 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!111 &5065595598415970035
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5130868318674675035}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Animation: {fileID: 7400000, guid: e7a94fe987fa71446825228617ec67d0, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: e7a94fe987fa71446825228617ec67d0, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_UpdateMode: 0
+  m_CullingType: 0
 --- !u!1 &5743043164830736192
 GameObject:
   m_ObjectHideFlags: 0

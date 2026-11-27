@@ -143,6 +143,7 @@ namespace DoHwa.UI
 
         private void AllowMenuInput(bool allowed)
         {
+            loginLogo.blocksRaycasts = allowed;
             menuGroup.interactable = allowed;
             menuGroup.blocksRaycasts = allowed;
         }

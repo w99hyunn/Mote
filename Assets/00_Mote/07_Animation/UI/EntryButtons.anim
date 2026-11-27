@@ -43,7 +43,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_Alpha
-    path: UtilityNavigation/NoticesButton
+    path: UtilityNavigation/NoticesButtonLayout/NoticesButton
     classID: 225
     script: {fileID: 0}
     flags: 0
@@ -73,7 +73,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_AnchoredPosition.y
-    path: UtilityNavigation/NoticesButton
+    path: UtilityNavigation/NoticesButtonLayout
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -103,7 +103,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_BlocksRaycasts
-    path: UtilityNavigation/NoticesButton
+    path: UtilityNavigation/NoticesButtonLayout/NoticesButton
     classID: 225
     script: {fileID: 0}
     flags: 0
@@ -133,7 +133,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_Alpha
-    path: UtilityNavigation/SettingsButton
+    path: UtilityNavigation/SettingsButtonLayout/SettingsButton
     classID: 225
     script: {fileID: 0}
     flags: 0
@@ -163,7 +163,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_AnchoredPosition.y
-    path: UtilityNavigation/SettingsButton
+    path: UtilityNavigation/SettingsButtonLayout
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -193,7 +193,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_BlocksRaycasts
-    path: UtilityNavigation/SettingsButton
+    path: UtilityNavigation/SettingsButtonLayout/SettingsButton
     classID: 225
     script: {fileID: 0}
     flags: 0
@@ -223,7 +223,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_Alpha
-    path: UtilityNavigation/LanguageButton
+    path: UtilityNavigation/LanguageButtonLayout/LanguageButton
     classID: 225
     script: {fileID: 0}
     flags: 0
@@ -253,7 +253,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_AnchoredPosition.y
-    path: UtilityNavigation/LanguageButton
+    path: UtilityNavigation/LanguageButtonLayout
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -283,7 +283,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_BlocksRaycasts
-    path: UtilityNavigation/LanguageButton
+    path: UtilityNavigation/LanguageButtonLayout/LanguageButton
     classID: 225
     script: {fileID: 0}
     flags: 0
@@ -313,7 +313,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_Alpha
-    path: PlanetEntry
+    path: PlanetEntryLayout/PlanetEntry
     classID: 225
     script: {fileID: 0}
     flags: 0
@@ -343,7 +343,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_AnchoredPosition.y
-    path: PlanetEntry
+    path: PlanetEntryLayout
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -373,7 +373,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_BlocksRaycasts
-    path: PlanetEntry
+    path: PlanetEntryLayout/PlanetEntry
     classID: 225
     script: {fileID: 0}
     flags: 0
@@ -403,7 +403,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_Alpha
-    path: UtilityNavigation/LogoutButton
+    path: UtilityNavigation/LogoutButtonLayout/LogoutButton
     classID: 225
     script: {fileID: 0}
     flags: 0
@@ -433,7 +433,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_AnchoredPosition.y
-    path: UtilityNavigation/LogoutButton
+    path: UtilityNavigation/LogoutButtonLayout
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -463,7 +463,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_BlocksRaycasts
-    path: UtilityNavigation/LogoutButton
+    path: UtilityNavigation/LogoutButtonLayout/LogoutButton
     classID: 225
     script: {fileID: 0}
     flags: 0
@@ -476,7 +476,7 @@ AnimationClip:
   m_ClipBindingConstant:
     genericBindings:
     - serializedVersion: 2
-      path: 808341268
+      path: 1813668649
       attribute: 1574349066
       script: {fileID: 0}
       typeID: 225
@@ -486,7 +486,7 @@ AnimationClip:
       isSerializeReferenceCurve: 0
       metaData: 0
     - serializedVersion: 2
-      path: 808341268
+      path: 469032028
       attribute: 538195251
       script: {fileID: 0}
       typeID: 224
@@ -496,7 +496,7 @@ AnimationClip:
       isSerializeReferenceCurve: 0
       metaData: 0
     - serializedVersion: 2
-      path: 808341268
+      path: 1813668649
       attribute: 3739863151
       script: {fileID: 0}
       typeID: 225
@@ -506,7 +506,7 @@ AnimationClip:
       isSerializeReferenceCurve: 0
       metaData: 0
     - serializedVersion: 2
-      path: 2725381739
+      path: 1749405696
       attribute: 1574349066
       script: {fileID: 0}
       typeID: 225
@@ -516,7 +516,7 @@ AnimationClip:
       isSerializeReferenceCurve: 0
       metaData: 0
     - serializedVersion: 2
-      path: 2725381739
+      path: 3408889332
       attribute: 538195251
       script: {fileID: 0}
       typeID: 224
@@ -526,7 +526,7 @@ AnimationClip:
       isSerializeReferenceCurve: 0
       metaData: 0
     - serializedVersion: 2
-      path: 2725381739
+      path: 1749405696
       attribute: 3739863151
       script: {fileID: 0}
       typeID: 225
@@ -536,7 +536,7 @@ AnimationClip:
       isSerializeReferenceCurve: 0
       metaData: 0
     - serializedVersion: 2
-      path: 1710441587
+      path: 2262801301
       attribute: 1574349066
       script: {fileID: 0}
       typeID: 225
@@ -546,7 +546,7 @@ AnimationClip:
       isSerializeReferenceCurve: 0
       metaData: 0
     - serializedVersion: 2
-      path: 1710441587
+      path: 3348914096
       attribute: 538195251
       script: {fileID: 0}
       typeID: 224
@@ -556,7 +556,7 @@ AnimationClip:
       isSerializeReferenceCurve: 0
       metaData: 0
     - serializedVersion: 2
-      path: 1710441587
+      path: 2262801301
       attribute: 3739863151
       script: {fileID: 0}
       typeID: 225
@@ -566,7 +566,7 @@ AnimationClip:
       isSerializeReferenceCurve: 0
       metaData: 0
     - serializedVersion: 2
-      path: 862242468
+      path: 2408645411
       attribute: 1574349066
       script: {fileID: 0}
       typeID: 225
@@ -576,7 +576,7 @@ AnimationClip:
       isSerializeReferenceCurve: 0
       metaData: 0
     - serializedVersion: 2
-      path: 862242468
+      path: 1260854218
       attribute: 538195251
       script: {fileID: 0}
       typeID: 224
@@ -586,7 +586,7 @@ AnimationClip:
       isSerializeReferenceCurve: 0
       metaData: 0
     - serializedVersion: 2
-      path: 862242468
+      path: 2408645411
       attribute: 3739863151
       script: {fileID: 0}
       typeID: 225
@@ -596,7 +596,7 @@ AnimationClip:
       isSerializeReferenceCurve: 0
       metaData: 0
     - serializedVersion: 2
-      path: 112579448
+      path: 744081795
       attribute: 1574349066
       script: {fileID: 0}
       typeID: 225
@@ -606,7 +606,7 @@ AnimationClip:
       isSerializeReferenceCurve: 0
       metaData: 0
     - serializedVersion: 2
-      path: 112579448
+      path: 982722283
       attribute: 538195251
       script: {fileID: 0}
       typeID: 224
@@ -616,7 +616,7 @@ AnimationClip:
       isSerializeReferenceCurve: 0
       metaData: 0
     - serializedVersion: 2
-      path: 112579448
+      path: 744081795
       attribute: 3739863151
       script: {fileID: 0}
       typeID: 225
@@ -673,7 +673,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_Alpha
-    path: UtilityNavigation/NoticesButton
+    path: UtilityNavigation/NoticesButtonLayout/NoticesButton
     classID: 225
     script: {fileID: 0}
     flags: 0
@@ -703,7 +703,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_AnchoredPosition.y
-    path: UtilityNavigation/NoticesButton
+    path: UtilityNavigation/NoticesButtonLayout
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -733,7 +733,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_BlocksRaycasts
-    path: UtilityNavigation/NoticesButton
+    path: UtilityNavigation/NoticesButtonLayout/NoticesButton
     classID: 225
     script: {fileID: 0}
     flags: 0
@@ -763,7 +763,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_Alpha
-    path: UtilityNavigation/SettingsButton
+    path: UtilityNavigation/SettingsButtonLayout/SettingsButton
     classID: 225
     script: {fileID: 0}
     flags: 0
@@ -793,7 +793,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_AnchoredPosition.y
-    path: UtilityNavigation/SettingsButton
+    path: UtilityNavigation/SettingsButtonLayout
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -823,7 +823,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_BlocksRaycasts
-    path: UtilityNavigation/SettingsButton
+    path: UtilityNavigation/SettingsButtonLayout/SettingsButton
     classID: 225
     script: {fileID: 0}
     flags: 0
@@ -853,7 +853,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_Alpha
-    path: UtilityNavigation/LanguageButton
+    path: UtilityNavigation/LanguageButtonLayout/LanguageButton
     classID: 225
     script: {fileID: 0}
     flags: 0
@@ -883,7 +883,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_AnchoredPosition.y
-    path: UtilityNavigation/LanguageButton
+    path: UtilityNavigation/LanguageButtonLayout
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -913,7 +913,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_BlocksRaycasts
-    path: UtilityNavigation/LanguageButton
+    path: UtilityNavigation/LanguageButtonLayout/LanguageButton
     classID: 225
     script: {fileID: 0}
     flags: 0
@@ -943,7 +943,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_Alpha
-    path: PlanetEntry
+    path: PlanetEntryLayout/PlanetEntry
     classID: 225
     script: {fileID: 0}
     flags: 0
@@ -973,7 +973,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_AnchoredPosition.y
-    path: PlanetEntry
+    path: PlanetEntryLayout
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -1003,7 +1003,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_BlocksRaycasts
-    path: PlanetEntry
+    path: PlanetEntryLayout/PlanetEntry
     classID: 225
     script: {fileID: 0}
     flags: 0
@@ -1033,7 +1033,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_Alpha
-    path: UtilityNavigation/LogoutButton
+    path: UtilityNavigation/LogoutButtonLayout/LogoutButton
     classID: 225
     script: {fileID: 0}
     flags: 0
@@ -1063,7 +1063,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_AnchoredPosition.y
-    path: UtilityNavigation/LogoutButton
+    path: UtilityNavigation/LogoutButtonLayout
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -1093,7 +1093,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_BlocksRaycasts
-    path: UtilityNavigation/LogoutButton
+    path: UtilityNavigation/LogoutButtonLayout/LogoutButton
     classID: 225
     script: {fileID: 0}
     flags: 0

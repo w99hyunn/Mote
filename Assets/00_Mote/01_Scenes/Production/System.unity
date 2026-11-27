@@ -289,6 +289,14 @@ PrefabInstance:
       propertyPath: m_AdditionalShaderChannelsFlag
       value: 25
       objectReference: {fileID: 0}
+    - target: {fileID: 7754511572024193866, guid: e9a53a393c74aaf4d86575d368f90123, type: 3}
+      propertyPath: releaseClip
+      value: 
+      objectReference: {fileID: 7400000, guid: 0cc474ef4ed165c45b80583634c3b8cb, type: 2}
+    - target: {fileID: 7754511572024193866, guid: e9a53a393c74aaf4d86575d368f90123, type: 3}
+      propertyPath: pressFeedback
+      value: 
+      objectReference: {fileID: 1370176460}
     - target: {fileID: 8266844558872123942, guid: e9a53a393c74aaf4d86575d368f90123, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -376,6 +384,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 688397510608470242, guid: e9a53a393c74aaf4d86575d368f90123, type: 3}
       insertIndex: -1
       addedObject: {fileID: 199110357}
+    - targetCorrespondingSourceObject: {fileID: 1988854404746195444, guid: e9a53a393c74aaf4d86575d368f90123, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1370176460}
   m_SourcePrefab: {fileID: 100100000, guid: e9a53a393c74aaf4d86575d368f90123, type: 3}
 --- !u!114 &199110342 stripped
 MonoBehaviour:
@@ -2378,6 +2389,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a0bd6b11cb840d8853d4e88e4be018c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DoHwa.UI.MobileButton
+--- !u!1 &1370176459 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1988854404746195444, guid: e9a53a393c74aaf4d86575d368f90123, type: 3}
+  m_PrefabInstance: {fileID: 199110341}
+  m_PrefabAsset: {fileID: 0}
+--- !u!111 &1370176460
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1370176459}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Animation: {fileID: 7400000, guid: e7a94fe987fa71446825228617ec67d0, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: e7a94fe987fa71446825228617ec67d0, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_UpdateMode: 0
+  m_CullingType: 0
 --- !u!1 &1400688516
 GameObject:
   m_ObjectHideFlags: 0
@@ -2393,6 +2426,7 @@ GameObject:
   - component: {fileID: 1400688519}
   - component: {fileID: 1400688518}
   - component: {fileID: 1400688524}
+  - component: {fileID: 1400688525}
   m_Layer: 5
   m_Name: Korean
   m_TagString: Untagged
@@ -2513,7 +2547,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  feedbackVisual: {fileID: 0}
+  pressFeedback: {fileID: 1400688525}
 --- !u!114 &1400688522
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2564,6 +2598,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93f7be488091e5e4c9459bf9188d2c20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DoHwa.UI.UiCapsuleSlice
+--- !u!111 &1400688525
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1400688516}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Animation: {fileID: 7400000, guid: e7a94fe987fa71446825228617ec67d0, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: e7a94fe987fa71446825228617ec67d0, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_UpdateMode: 0
+  m_CullingType: 0
 --- !u!224 &1484090875 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 378523431495785985, guid: 4fd167768ef3a1542856a65bb45e3645, type: 3}

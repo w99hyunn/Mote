@@ -404,6 +404,7 @@ GameObject:
   - component: {fileID: 7852359973874210818}
   - component: {fileID: 1817699808510314343}
   - component: {fileID: 4815033668221345148}
+  - component: {fileID: 6067217136940538089}
   m_Layer: 5
   m_Name: ConfirmButton
   m_TagString: Untagged
@@ -519,7 +520,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
-  feedbackVisual: {fileID: 0}
+  pressFeedback: {fileID: 6067217136940538089}
 --- !u!225 &8551750113441638703
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -591,6 +592,23 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!111 &6067217136940538089
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8110775211230054863}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Animation: {fileID: 7400000, guid: e7a94fe987fa71446825228617ec67d0, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: e7a94fe987fa71446825228617ec67d0, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_UpdateMode: 0
+  m_CullingType: 0
 --- !u!1 &8890896140262113724
 GameObject:
   m_ObjectHideFlags: 0
