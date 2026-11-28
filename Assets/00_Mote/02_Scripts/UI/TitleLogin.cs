@@ -17,12 +17,11 @@ namespace DoHwa.UI
     public sealed class TitleLogin : MonoBehaviour
     {
         [SerializeField] private TitleEntry entry;
-        [SerializeField, Tooltip("Mote 서버 HTTPS 주소. 에디터에서 비워 두면 로컬 개발 서버를 사용합니다.")] private string serverUrl;
+        [SerializeField] private ServerSettings serverSettings;
         [SerializeField] private CanvasGroup loginLogo;
         [SerializeField] private CanvasGroup mainCanvasGroup;
         [SerializeField] private Button googleButton;
         [SerializeField] private Button gamesButton;
-        [SerializeField] private string googleProvider = "oidc-google";
         [SerializeField] private Button guestButton;
         [SerializeField] private TMP_Text progressLabel;
         [SerializeField] private CanvasGroup menuGroup;
@@ -70,7 +69,7 @@ namespace DoHwa.UI
                 if (provider == "External")
                 {
                     var info = await auth.GetPlayerInfoAsync();
-                    bool hasGoogle = info.Identities.Exists(i => i.TypeId == googleProvider);
+                    bool hasGoogle = info.Identities.Exists(i => i.TypeId == serverSettings.GoogleProvider);
                     bool hasGames = info.Identities.Exists(i => i.TypeId == "google-play-games");
                     if (hasGoogle == hasGames) return;
                     provider = hasGoogle ? "Google" : "GPGS";
@@ -161,20 +160,9 @@ namespace DoHwa.UI
 
         [Serializable] private sealed class LoginResponse { public string playerId; }
 
-        private Uri GetServerEndpoint()
-        {
-            string url = serverUrl;
-#if UNITY_EDITOR
-            if (string.IsNullOrWhiteSpace(url)) url = "https://localhost:7248";
-#endif
-            if (!Uri.TryCreate(url, UriKind.Absolute, out var endpoint) || endpoint.Scheme != Uri.UriSchemeHttps)
-                throw new InvalidOperationException("Mote server HTTPS URL is required.");
-            return endpoint;
-        }
-
         private async Task ShowEntryAsync(string provider)
         {
-            var endpoint = GetServerEndpoint();
+            var endpoint = serverSettings.Endpoint;
             var auth = AuthenticationService.Instance;
             using var request = new UnityEngine.Networking.UnityWebRequest(new Uri(endpoint, "/api/auth/login"), "POST");
             request.downloadHandler = new UnityEngine.Networking.DownloadHandlerBuffer();
@@ -214,12 +202,12 @@ namespace DoHwa.UI
             SignIn("Google", async () =>
             {
 #if UNITY_EDITOR || UNITY_STANDALONE
-                string token = await DesktopGoogleLogin.GetToken(GetServerEndpoint(), destroyCancellationToken);
+                string token = await DesktopGoogleLogin.GetToken(serverSettings.Endpoint, destroyCancellationToken);
 #else
                 string token = await GetGoogleToken();
 #endif
                 SelectProfile("default");
-                await AuthenticationService.Instance.SignInWithOpenIdConnectAsync(googleProvider, token);
+                await AuthenticationService.Instance.SignInWithOpenIdConnectAsync(serverSettings.GoogleProvider, token);
             });
 #else
             ShowAndroidNotice();
