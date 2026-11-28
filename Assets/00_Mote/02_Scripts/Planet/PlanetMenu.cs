@@ -27,7 +27,7 @@ namespace DoHwa.Planet
         [SerializeField] private Button[] shelfTabs, giftChoices;
         [SerializeField] private TMP_Text capacity, shelfHint, dockAction, giftHint;
         [SerializeField] private GameObject giftSheet, utilityToggle;
-        private static readonly string[] ShelfHints = { "초지에 심을 장식", "함께 머물 자리를 꾸며요", "친구가 열매를 놓을 자리를 열어요" };
+        private static readonly string[] ShelfHints = { "초지에 심을 장식", "함께 머물 자리를 꾸며요", "친구가 열매를 놓을 자리를 열어요", "하늘을 골라 주세요" };
         private readonly List<PlanetItem> draft = new();
         private PlanetData data = new();
         private bool busy, editing;
@@ -35,6 +35,11 @@ namespace DoHwa.Planet
         [SerializeField] private Image actionIcon;
         [SerializeField] private Sprite craftIcon, fruitIcon;
         private PlanetItem[] previousEdit;
+        [SerializeField] private Renderer skyRenderer;
+        [SerializeField] private MeshRenderer cloudLayer;
+        [SerializeField] private Button[] skyChoices;
+        private int draftSky, previousSky;
+        private Color skyCardColor;
         private int lastPlaced = -1;
         [SerializeField] private Image[] dockSelections, dockGlyphs, shelfSelections, shelfGlyphs;
         [SerializeField] private Color selectedInk, idleInk;
@@ -44,7 +49,7 @@ namespace DoHwa.Planet
         private string pendingId, pendingText;
 
         private bool Visiting => !string.IsNullOrEmpty(data.owner) && data.owner != PlanetApi.Player;
-        private bool Changed => !draft.SequenceEqual(data.items);
+        private bool Changed => draftSky != data.sky || !draft.SequenceEqual(data.items);
         private int grabbed = -1;
         private void OnEnable()
         {
@@ -86,7 +91,7 @@ namespace DoHwa.Planet
             }
             if (commit)
             {
-                previousEdit = draft.ToArray();
+                RememberEdit();
                 var item = draft[index];
                 item.x = n.x;
                 item.y = n.y;
@@ -100,6 +105,7 @@ namespace DoHwa.Planet
         }
         private void Start()
         {
+            skyCardColor = skyChoices[0].targetGraphic.color;
             destination.onValueChanged.AddListener(_ => Buttons());
             message.onValueChanged.AddListener(_ => Buttons());
             utilities.SetActive(false);
@@ -143,6 +149,7 @@ namespace DoHwa.Planet
         {
             draft.Clear();
             draft.AddRange(data.items);
+            PreviewSky(data.sky);
             previousEdit = null;
             lastPlaced = -1;
             RebuildPlaced();
@@ -176,6 +183,11 @@ namespace DoHwa.Planet
             capacity.text = draft.Count+" / 48";
             for (int i=0; i<giftChoices.Length; i++)
                 Availability(giftChoices[i], !busy && OpenSlot(i) >= 0);
+            for (int i = 0; i < skyChoices.Length; i++)
+                {
+                Availability(skyChoices[i], !busy);
+                skyChoices[i].targetGraphic.color = i == draftSky ? shelfSelections[3].color : skyCardColor;
+            }
             Availability(save, !busy && Changed);
             Availability(remove, draft.Count > 0);
             Availability(travel, !busy && !string.IsNullOrWhiteSpace(destination.text));
@@ -242,7 +254,36 @@ namespace DoHwa.Planet
             }
             SetTab(shelfSelections, shelfGlyphs, index);
             selectedShelf = index;
-            shelfHint.text = ShelfHints[index];
+            UpdateShelfHint();
+        }
+
+        private void UpdateShelfHint()
+        {
+            shelfHint.text = selectedShelf == 3 ? "선택한 하늘   " + catalog.Sky(draftSky).displayName : ShelfHints[selectedShelf];
+        }
+
+        private void PreviewSky(int index)
+        {
+            draftSky = index;
+            var sky = catalog.Sky(index);
+            skyRenderer.sharedMaterial = sky.material;
+            cloudLayer.enabled = sky.cloudMaterial != null;
+            if (cloudLayer.enabled) cloudLayer.sharedMaterial = sky.cloudMaterial;
+            UpdateShelfHint();
+        }
+
+        private void RememberEdit()
+        {
+            previousSky = draftSky;
+            previousEdit = draft.ToArray();
+        }
+
+        public void ChooseSky(int index)
+        {
+            if (busy || !editing || Visiting || index == draftSky) return;
+            RememberEdit();
+            PreviewSky(index);
+            Buttons();
         }
         private void SetTab(Image[] selections, Image[] glyphs, int selected)
         {
@@ -278,7 +319,7 @@ namespace DoHwa.Planet
             if (busy) return;
             if (editing && Changed)
             {
-                SystemUI.Confirm("행성 꾸미기", "저장하지 않은 배치를 되돌릴까요?", "되돌리기", Discard);
+                SystemUI.Confirm("행성 꾸미기", "저장하지 않은 변경 사항을 되돌릴까요?", "되돌리기", Discard);
                 return;
             }
             Discard();
@@ -334,7 +375,7 @@ namespace DoHwa.Planet
             if (tool < 0)
             {
                 if (near < 0) return;
-                previousEdit = draft.ToArray();
+                RememberEdit();
                 lastPlaced = -1;
                 placed.GetChild(near).gameObject.SetActive(false);
                 var old = placed.GetChild(near);
@@ -347,7 +388,7 @@ namespace DoHwa.Planet
                 if (near >= 0) { placementHint.text = "조금 더 떨어진 곳에 놓아 주세요"; return; }
                 if (draft.Count >= 48) { placementHint.text = "장식을 모두 놓았어요"; return; }
                 var item = new PlanetItem { kind=catalog[tool].kind, x=n.x, y=n.y, z=n.z };
-                previousEdit = draft.ToArray();
+                RememberEdit();
                 lastPlaced = draft.Count;
                 draft.Add(item);
                 Draw(item);
@@ -357,7 +398,7 @@ namespace DoHwa.Planet
         public void RotatePlaced()
         {
             if (busy || !editing || lastPlaced < 0 || lastPlaced >= draft.Count) return;
-            previousEdit = draft.ToArray();
+            RememberEdit();
             var item = draft[lastPlaced];
             item.yaw = (item.yaw+45)%360;
             draft[lastPlaced] = item;
@@ -370,6 +411,7 @@ namespace DoHwa.Planet
             if (busy || previousEdit==null) return;
             draft.Clear();
             draft.AddRange(previousEdit);
+            PreviewSky(previousSky);
             previousEdit=null;
             lastPlaced=-1;
             RebuildPlaced();
@@ -377,9 +419,10 @@ namespace DoHwa.Planet
         }
         public void SaveLayout() => Run(async () =>
         {
-            await PlanetApi.Save(data.revision,draft.ToArray());
+            await PlanetApi.Save(data.revision, draft.ToArray(), draftSky);
             if (!this) return;
             data.items = draft.ToArray();
+            data.sky = draftSky;
             data.revision++;
             editing = false;
             Show(null);

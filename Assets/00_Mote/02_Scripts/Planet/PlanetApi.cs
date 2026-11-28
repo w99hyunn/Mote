@@ -19,6 +19,7 @@ namespace DoHwa.Planet
     [Serializable] public class PlanetData
     {
         public string owner;
+        public int sky;
         public int revision;
         public PlanetItem[] items = Array.Empty<PlanetItem>();
         public PlanetNote[] notes = Array.Empty<PlanetNote>();
@@ -32,7 +33,7 @@ namespace DoHwa.Planet
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Reset() => Endpoint = null;
         [Serializable] private class Gift { public int revision, slot; }
-        [Serializable] private class Layout { public int revision; public PlanetItem[] items; }
+        [Serializable] private class Layout { public int revision, sky; public PlanetItem[] items; }
         [Serializable] private class Note { public string id, text; }
 
         private static async Task<string> Send(string path, string method, string body = null)
@@ -60,8 +61,8 @@ namespace DoHwa.Planet
         }
         internal static async Task<PlanetData> Read(string owner) =>
             JsonUtility.FromJson<PlanetData>(await Send(Uri.EscapeDataString(owner), "GET"));
-        internal static Task Save(int revision, PlanetItem[] items) =>
-            Send("me/layout", "PUT", JsonUtility.ToJson(new Layout { revision=revision, items=items }));
+        internal static Task Save(int revision, PlanetItem[] items, int sky) =>
+            Send("me/layout", "PUT", JsonUtility.ToJson(new Layout { revision=revision, items=items, sky=sky }));
         internal static Task LeaveGift(string owner, int revision, int slot) =>
             Send(Uri.EscapeDataString(owner)+"/gifts", "POST", JsonUtility.ToJson(new Gift { revision=revision, slot=slot }));
         internal static Task Write(string owner, string id, string text) =>

@@ -15,6 +15,17 @@ namespace DoHwa.Planet
             public GameObject gift;
         }
 
+        [Serializable]
+        public struct SkyPreset
+        {
+            public string displayName;
+            public Material material;
+            public Material cloudMaterial;
+        }
+
+        [SerializeField] private SkyPreset[] skies;
+        public SkyPreset Sky(int index) => skies[index >= 0 && index < skies.Length ? index : 0];
+
         [SerializeField] private Decoration[] entries;
         public Decoration this[int index] => entries[index];
 

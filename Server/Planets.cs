@@ -7,7 +7,7 @@ internal static class Planets
 {
     internal record Item(string Kind, float X, float Y, float Z, string? GiftFrom = null, int Yaw = 0);
     internal record Gift(int Revision, int Slot);
-    internal record Layout(int Revision, Item[] Items);
+    internal record Layout(int Revision, Item[] Items, int? Sky = null);
     internal record Note(string Id, string Text);
 
     internal static async Task MapPlanetsAsync(this WebApplication app)
@@ -24,6 +24,7 @@ internal static class Planets
                     revision integer NOT NULL DEFAULT 0,
                     items jsonb NOT NULL DEFAULT '[]'::jsonb
                 );
+                ALTER TABLE mote.planets ADD COLUMN IF NOT EXISTS sky integer NOT NULL DEFAULT 0;
                 CREATE TABLE IF NOT EXISTS mote.notes (
                     seq bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
                     owner text NOT NULL REFERENCES mote.planets(owner) ON DELETE CASCADE,
@@ -57,25 +58,25 @@ internal static class Planets
             SELECT revision, items, (
                 SELECT COALESCE(jsonb_agg(to_jsonb(n) - 'seq' ORDER BY n.seq DESC), '[]'::jsonb)
                 FROM (SELECT seq, author, body AS text FROM mote.notes WHERE owner=$1 ORDER BY seq DESC LIMIT 30) n
-            ) FROM mote.planets WHERE owner=$1
+            ) AS notes, sky FROM mote.planets WHERE owner=$1
             """, db);
         cmd.Parameters.Add(new NpgsqlParameter<string> { TypedValue = id });
         await using var row = await cmd.ExecuteReaderAsync(ct);
         if (!await row.ReadAsync(ct)) return Results.NotFound();
-        return Results.Ok(new { owner = id, revision = row.GetInt32(0),
+        return Results.Ok(new { owner = id, revision = row.GetInt32(0), sky = row.GetInt32(3),
             items = JsonSerializer.Deserialize<Item[]>(row.GetString(1)),
             notes = JsonSerializer.Deserialize<JsonElement>(row.GetString(2)) });
     }
 
     private static async Task<IResult> Save(Layout layout, ClaimsPrincipal user, NpgsqlDataSource data, CancellationToken ct)
     {
-        if (layout.Items == null || layout.Items.Length > 48 || layout.Items.Any(i =>
+        if (layout.Sky is < 0 or > 3 || layout.Items == null || layout.Items.Length > 48 || layout.Items.Any(i =>
             i == null || i.Kind is not ("tree" or "flower" or "stone" or "bench" or "tent" or "lamp" or "pond" or "cloud") ||
             i.Yaw is < 0 or >= 360 || i.Yaw % 45 != 0 ||
             Math.Abs(i.X*i.X+i.Y*i.Y+i.Z*i.Z-1) > .015f)) return Results.BadRequest();
         // A gift belongs to the original host-approved site. Only the gift endpoint can create one.
         await using var cmd = data.CreateCommand("""
-            UPDATE mote.planets p SET revision=revision+1, items=(
+            UPDATE mote.planets p SET revision=revision+1, sky=COALESCE($4, p.sky), items=(
                 SELECT coalesce(jsonb_agg((incoming.item - 'GiftFrom') || coalesce((
                     SELECT jsonb_build_object('GiftFrom', old->'GiftFrom') FROM jsonb_array_elements(p.items) old
                     WHERE old->>'GiftFrom' IS NOT NULL AND old - 'GiftFrom' - 'Yaw'=incoming.item - 'GiftFrom' - 'Yaw' LIMIT 1
@@ -86,6 +87,7 @@ internal static class Planets
         cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Jsonb, Value = JsonSerializer.Serialize(layout.Items) });
         cmd.Parameters.Add(new NpgsqlParameter<string> { TypedValue = user.FindFirstValue("sub")! });
         cmd.Parameters.Add(new NpgsqlParameter<int> { TypedValue = layout.Revision });
+        cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = (object?)layout.Sky ?? DBNull.Value });
         return await cmd.ExecuteNonQueryAsync(ct) == 1 ? Results.NoContent() : Results.Conflict();
     }
 

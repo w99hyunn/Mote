@@ -12,6 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 200ca4d632c7e8949bbc83c3626ed14e, type: 3}
   m_Name: PlanetDecorationCatalog
   m_EditorClassIdentifier: Assembly-CSharp::DoHwa.Planet.PlanetDecorationCatalog
+  skies:
+  - displayName: "\uB9D1\uC740 \uB0AE"
+    material: {fileID: 2100000, guid: f2d48d675bf4b3140bae42d84909203a, type: 2}
+    cloudMaterial: {fileID: 0}
+  - displayName: "\uC0B4\uAD6C\uBE5B \uB178\uC744"
+    material: {fileID: 2100000, guid: 2ccb37c94fdcc294da5b47629b890037, type: 2}
+    cloudMaterial: {fileID: 0}
+  - displayName: "\uBCC4\uC774 \uB72C \uBC24"
+    material: {fileID: 2100000, guid: 31668b7115ff8504d9fb6552ecce91ba, type: 2}
+    cloudMaterial: {fileID: 0}
+  - displayName: "\uBB49\uAC8C\uAD6C\uB984"
+    material: {fileID: 2100000, guid: fc4b3609c448d13428b4b24a59239bf0, type: 2}
+    cloudMaterial: {fileID: 2100000, guid: 7f818a1da677cf548a5ef88c3d7c7ad8, type: 2}
   entries:
   - kind: tree
     displayName: "\uB098\uBB34"

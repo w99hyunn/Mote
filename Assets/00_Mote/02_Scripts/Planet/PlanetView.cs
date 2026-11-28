@@ -22,7 +22,7 @@ namespace DoHwa.Planet
         public event Action<Vector3> MoveGrab;
         public event Action<bool> EndGrab;
 
-        private Vector2 angles, velocity;
+        private Vector2 velocity;
         private int? pointer, secondPointer;
         private Vector2 firstPosition, secondPosition;
         private bool grabbing, usedPinch;
@@ -35,20 +35,18 @@ namespace DoHwa.Planet
 
         public void Face(Vector3 direction)
         {
-            angles.y = Mathf.Atan2(direction.x, -direction.z) * Mathf.Rad2Deg;
-            angles.x = -Mathf.Asin(Mathf.Clamp(direction.y, -1f, 1f)) * Mathf.Rad2Deg;
+            if (direction.sqrMagnitude < Mathf.Epsilon) return;
+            Vector3 facing = transform.TransformDirection(direction.normalized);
+            transform.rotation = Quaternion.FromToRotation(facing, -viewCamera.transform.forward) * transform.rotation;
             velocity = Vector2.zero;
-            ApplyRotation();
         }
-
-        private void ApplyRotation() => transform.localRotation =
-            Quaternion.AngleAxis(angles.x, Vector3.right) * Quaternion.AngleAxis(angles.y, Vector3.up);
 
         private void Turn(Vector2 delta)
         {
-            angles.x = Mathf.Clamp(angles.x + delta.x, -89f, 89f);
-            angles.y = Mathf.Repeat(angles.y + delta.y, 360f);
-            ApplyRotation();
+            Vector3 axis = viewCamera.transform.right * delta.x + viewCamera.transform.up * delta.y;
+            float degrees = axis.magnitude;
+            if (degrees > 0f)
+                transform.rotation = Quaternion.AngleAxis(degrees, axis / degrees) * transform.rotation;
         }
 
         private void LateUpdate()
