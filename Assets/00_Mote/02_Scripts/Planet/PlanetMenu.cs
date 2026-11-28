@@ -13,19 +13,17 @@ namespace DoHwa.Planet
     public sealed class PlanetMenu : MonoBehaviour
     {
         [SerializeField] private PlanetView globe;
-        [SerializeField] private GameObject[] decorations;
+        [SerializeField] private PlanetDecorationCatalog catalog;
         [SerializeField] private Transform placed;
         [SerializeField] private GameObject dock, utilities, shade, decorate, visit, journal, placement;
         [SerializeField] private TMP_Text header, placementHint, noteList, pageLabel, address;
         [SerializeField] private TMP_InputField destination, message;
         [SerializeField] private Button save, remove, send, travel, prev, next, copy, home, editButton;
         [SerializeField] private RectTransform bottomArea;
-        private static readonly string[] Kinds = { "tree", "flower", "stone", "bench", "tent", "lamp", "pond", "cloud" };
-        private static readonly string[] Names = { "나무", "꽃밭", "돌무더기", "나무 벤치", "줄무늬 천막", "정원 등불", "연꽃 연못", "구름 언덕" };
         [SerializeField] private GameObject[] entryRows;
         [SerializeField] private TMP_Text[] entryBodies, entryAuthors;
         [SerializeField] private Button[] revisit;
-        [SerializeField] private GameObject[] shelves, giftModels;
+        [SerializeField] private GameObject[] shelves;
         [SerializeField] private Button[] shelfTabs, giftChoices;
         [SerializeField] private TMP_Text capacity, shelfHint, dockAction, giftHint;
         [SerializeField] private GameObject giftSheet, utilityToggle;
@@ -160,17 +158,8 @@ namespace DoHwa.Planet
             }
             foreach (var item in draft) Draw(item);
         }
-        private void Draw(PlanetItem item)
-        {
-            int index = Array.IndexOf(Kinds,item.kind);
-            if (index < 0) return;
-            var instance = Instantiate(decorations[index], placed, false).transform;
-            var n = item.Direction.normalized;
-            instance.localPosition = globe.SurfacePosition(n);
-            instance.localRotation = Quaternion.FromToRotation(Vector3.up,n) * Quaternion.AngleAxis(item.yaw, Vector3.up);
-            if (!string.IsNullOrEmpty(item.giftFrom) && index >= 6)
-                Instantiate(giftModels[index-6], instance, false);
-        }
+        private void Draw(PlanetItem item) => catalog.Draw(item, globe, placed);
+
         private static void Availability(Button button, bool available)
         {
             button.interactable = available;
@@ -263,7 +252,7 @@ namespace DoHwa.Planet
                 glyphs[i].color = i == selected ? selectedInk : idleInk;
             }
         }
-        private int OpenSlot(int site) => Array.FindIndex(data.items, i=>i.kind==Kinds[6+site] && string.IsNullOrEmpty(i.giftFrom));
+        private int OpenSlot(int site) => Array.FindIndex(data.items, i=>i.kind==catalog[6+site].kind && string.IsNullOrEmpty(i.giftFrom));
         private void GiftSheet()
         {
             giftHint.text = OpenSlot(0)>=0 || OpenSlot(1)>=0 ? "열매를 놓을 자리를 골라 주세요." : "지금은 비어 있는 선물 자리가 없어요.";
@@ -313,7 +302,7 @@ namespace DoHwa.Planet
             if (!editing || busy) return;
             tool = index;
             lastPlaced = -1;
-            placementHint.text = index < 0 ? "거둘 장식을 눌러 주세요" : Names[index]+" · 눌러 놓기 / 끌어 옮기기";
+            placementHint.text = index < 0 ? "거둘 장식을 눌러 주세요" : catalog[index].displayName+" · 눌러 놓기 / 끌어 옮기기";
             Show(placement);
         }
         public void Palette() => Show(decorate);
@@ -357,7 +346,7 @@ namespace DoHwa.Planet
             {
                 if (near >= 0) { placementHint.text = "조금 더 떨어진 곳에 놓아 주세요"; return; }
                 if (draft.Count >= 48) { placementHint.text = "장식을 모두 놓았어요"; return; }
-                var item = new PlanetItem { kind=Kinds[tool], x=n.x, y=n.y, z=n.z };
+                var item = new PlanetItem { kind=catalog[tool].kind, x=n.x, y=n.y, z=n.z };
                 previousEdit = draft.ToArray();
                 lastPlaced = draft.Count;
                 draft.Add(item);

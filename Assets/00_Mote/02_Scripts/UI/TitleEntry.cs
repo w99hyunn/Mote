@@ -10,6 +10,7 @@ namespace DoHwa.UI
         [SerializeField] private CanvasGroup input;
         [SerializeField] private Image confetti;
         [SerializeField] private GameObject homeNavigation;
+        [SerializeField] private TitlePlanetPreview planetPreview;
         private Material effect;
         private bool entering;
 
@@ -23,6 +24,7 @@ namespace DoHwa.UI
         {
             gameObject.SetActive(true);
             homeNavigation.SetActive(true);
+            planetPreview.gameObject.SetActive(true);
         }
 
         public async void Enter()

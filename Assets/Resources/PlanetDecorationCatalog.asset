@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 200ca4d632c7e8949bbc83c3626ed14e, type: 3}
+  m_Name: PlanetDecorationCatalog
+  m_EditorClassIdentifier: Assembly-CSharp::DoHwa.Planet.PlanetDecorationCatalog
+  entries:
+  - kind: tree
+    displayName: "\uB098\uBB34"
+    model: {fileID: 1030248673539286358, guid: 2eb49929dbd5ac34080cd7f1ed76a13f, type: 3}
+    gift: {fileID: 0}
+  - kind: flower
+    displayName: "\uAF43\uBC2D"
+    model: {fileID: 6334977072754346949, guid: 9b0ef014f062bfa409f7a472d19d450a, type: 3}
+    gift: {fileID: 0}
+  - kind: stone
+    displayName: "\uB3CC\uBB34\uB354\uAE30"
+    model: {fileID: 4134082660725967325, guid: 2afd2005d3b998a4292f256fc35ab104, type: 3}
+    gift: {fileID: 0}
+  - kind: bench
+    displayName: "\uB098\uBB34 \uBCA4\uCE58"
+    model: {fileID: 5414680878733437764, guid: d03fe3f839ab4f84998dd70fb875adc3, type: 3}
+    gift: {fileID: 0}
+  - kind: tent
+    displayName: "\uC904\uBB34\uB2AC \uCC9C\uB9C9"
+    model: {fileID: 7101470666464297583, guid: 5fee314b48c8297438cb4dacfe9879e5, type: 3}
+    gift: {fileID: 0}
+  - kind: lamp
+    displayName: "\uC815\uC6D0 \uB4F1\uBD88"
+    model: {fileID: 8203487210514652133, guid: 94a2e767590b7d649995e5b380dc4bdc, type: 3}
+    gift: {fileID: 0}
+  - kind: pond
+    displayName: "\uC5F0\uAF43 \uC5F0\uBABB"
+    model: {fileID: 840223147360316377, guid: bff0c38a49a0b414cb9fedccf77a2873, type: 3}
+    gift: {fileID: 8108339604630575318, guid: 2abf218b7f52c5e44abe3b29202e054a, type: 3}
+  - kind: cloud
+    displayName: "\uAD6C\uB984 \uC5B8\uB355"
+    model: {fileID: 1644005447063808623, guid: 7ce0ec81bbd67c144998577b91f0f58a, type: 3}
+    gift: {fileID: 607689800224568466, guid: 5f9553784c4802b49ac8459da2a14748, type: 3}

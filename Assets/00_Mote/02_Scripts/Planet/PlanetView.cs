@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 namespace DoHwa.Planet
 {
-    public sealed class PlanetView : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IBeginDragHandler, IDragHandler, IPointerClickHandler
+    public sealed class PlanetView : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IBeginDragHandler, IDragHandler, IPointerClickHandler, IScrollHandler
     {
         [SerializeField] private Camera viewCamera;
         [SerializeField] private MeshCollider terrain;
@@ -23,9 +23,12 @@ namespace DoHwa.Planet
         public event Action<bool> EndGrab;
 
         private Vector2 angles, velocity;
-        private int? pointer;
-        private bool grabbing, overview;
-        private float lastDrag, zoom;
+        private int? pointer, secondPointer;
+        private Vector2 firstPosition, secondPosition;
+        private bool grabbing, usedPinch;
+        private float lastDrag, zoom, targetZoom;
+        private float overviewRatio = .5f;
+        [SerializeField, Range(1f, 2f)] private float maximumDetailScale = 1.3f;
         private Vector3 origin;
 
         private void Awake() => origin = transform.localPosition;
@@ -58,14 +61,16 @@ namespace DoHwa.Planet
                 Turn(velocity * ((1f - decay) / 6f));
                 velocity *= decay;
             }
-            zoom = Mathf.Lerp(zoom, overview ? 1f : 0f, 1f - Mathf.Exp(-8f * dt));
+            zoom = Mathf.Lerp(zoom, targetZoom, 1f - Mathf.Exp(-8f * dt));
             float distance = Vector3.Dot(transform.position - viewCamera.transform.position, viewCamera.transform.forward);
             float halfHeight = viewCamera.orthographic ? viewCamera.orthographicSize :
                 distance * Mathf.Tan(viewCamera.fieldOfView * Mathf.Deg2Rad * .5f);
             float width = halfHeight * viewCamera.aspect;
-            float radius = Mathf.Lerp(Mathf.Min(halfHeight * .88f, width * 1.63f), Mathf.Min(halfHeight * .56f, width * .81f), zoom);
+            float detailRadius = Mathf.Min(halfHeight * .88f, width * 1.63f);
+            overviewRatio = Mathf.Min(halfHeight * .56f, width * .81f) / detailRadius;
+            float radius = detailRadius * Mathf.Pow(overviewRatio, zoom);
             transform.localScale = Vector3.one * radius;
-            transform.localPosition = origin + Vector3.down * (1f - zoom) * halfHeight * .23f;
+            transform.localPosition = origin + Vector3.down * (1f - Mathf.Clamp01(zoom)) * halfHeight * .23f;
         }
 
         private bool TrySurface(PointerEventData e, out Vector3 direction)
@@ -77,14 +82,28 @@ namespace DoHwa.Planet
 
         public void OnPointerDown(PointerEventData e)
         {
-            if (pointer.HasValue || e.button != PointerEventData.InputButton.Left || SystemUI.PopupCapturesInput) return;
-            pointer = e.pointerId;
+            if (e.button != PointerEventData.InputButton.Left || SystemUI.PopupCapturesInput) return;
+            if (pointer.HasValue)
+            {
+                if (pointer == e.pointerId || secondPointer.HasValue) return;
+                secondPointer = e.pointerId;
+                secondPosition = e.position;
+                usedPinch = true;
+                if (grabbing) EndGrab?.Invoke(false);
+                grabbing = false;
+            }
+            else
+            {
+                pointer = e.pointerId;
+                firstPosition = e.position;
+                usedPinch = false;
+            }
             velocity = Vector2.zero;
         }
 
         public void OnBeginDrag(PointerEventData e)
         {
-            if (pointer != e.pointerId) return;
+            if (pointer != e.pointerId || usedPinch) return;
             e.eligibleForClick = false;
             var start = e.pointerPressRaycast;
             grabbing = start.gameObject == gameObject && TryGrab?.Invoke(transform.InverseTransformPoint(start.worldPosition).normalized) == true;
@@ -92,7 +111,16 @@ namespace DoHwa.Planet
 
         public void OnDrag(PointerEventData e)
         {
-            if (pointer != e.pointerId || SystemUI.PopupCapturesInput) return;
+            if (SystemUI.PopupCapturesInput || (pointer != e.pointerId && secondPointer != e.pointerId)) return;
+            float previousSpan = Vector2.Distance(firstPosition, secondPosition);
+            if (pointer == e.pointerId) firstPosition = e.position;
+            else secondPosition = e.position;
+            if (secondPointer.HasValue)
+            {
+                float span = Vector2.Distance(firstPosition, secondPosition);
+                if (previousSpan > 1f && span > 1f) ScaleBy(span / previousSpan);
+                return;
+            }
             if (grabbing)
             {
                 if (TrySurface(e, out var direction)) MoveGrab?.Invoke(direction);
@@ -107,7 +135,18 @@ namespace DoHwa.Planet
 
         public void OnPointerUp(PointerEventData e)
         {
-            if (pointer != e.pointerId) return;
+            if (pointer != e.pointerId && secondPointer != e.pointerId) return;
+            if (usedPinch) e.eligibleForClick = false;
+            if (secondPointer.HasValue)
+            {
+                if (pointer == e.pointerId)
+                {
+                    pointer = secondPointer;
+                    firstPosition = secondPosition;
+                }
+                secondPointer = null;
+                return;
+            }
             if (grabbing)
             {
                 bool valid = TrySurface(e, out var direction);
@@ -121,15 +160,29 @@ namespace DoHwa.Planet
 
         public void OnPointerClick(PointerEventData e)
         {
-            if (e.button != PointerEventData.InputButton.Left || e.dragging || !TrySurface(e, out var direction)) return;
+            if (e.button != PointerEventData.InputButton.Left || !e.eligibleForClick || e.dragging || !TrySurface(e, out var direction)) return;
             SurfaceTapped?.Invoke(direction);
         }
 
-        public void ToggleDistance() => overview = !overview;
+        private void ScaleBy(float factor)
+        {
+            float logRatio = Mathf.Log(overviewRatio);
+            targetZoom = Mathf.Clamp(targetZoom + Mathf.Log(factor) / logRatio,
+                Mathf.Log(maximumDetailScale) / logRatio, 1f);
+        }
+
+        public void OnScroll(PointerEventData e)
+        {
+            if (!pointer.HasValue && !SystemUI.PopupCapturesInput)
+                ScaleBy(Mathf.Exp(Mathf.Clamp(e.scrollDelta.y, -12f, 12f) * .025f));
+        }
+
+        public void ToggleDistance() => targetZoom = targetZoom < .5f ? 1f : 0f;
 
         private void OnDisable()
         {
             if (grabbing) EndGrab?.Invoke(false);
+            secondPointer = null;
             pointer = null;
             grabbing = false;
             velocity = Vector2.zero;
